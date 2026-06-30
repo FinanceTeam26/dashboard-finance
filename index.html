@@ -166,7 +166,7 @@ select{font-family:inherit;font-size:12.5px;font-weight:600;border:1.5px solid v
       <p class="cos">Stellantis · Localiza · Movida · Unidas · LM</p>
       <div class="foot">
         <div><b>Fonte:</b> ITR/Release e fontes internas</div>
-        <div><b>Atualizado em</b> 23/06/2026 17:31 (Brasília)</div>
+        <div><b>Atualizado em</b> 30/06/2026 11:11 (Brasília)</div>
         <div><b>Owner:</b> Pedro Cerqueira</div>
       </div>
     </div>
@@ -342,18 +342,23 @@ function render(){
 function renderOverview(a){
  const y=state.year, segLbl=state.seg==='gtf'?'Gestão de Frota':'Consolidado';
  // KPI tiles: receita / ebitda / margem ebitda / lucro liquido (consolidado) or gtf
+ // receita comparável da Stellantis (inclui seminovos/RMK) — fonte: aba "Receita Lease e RMK"; aplicada SÓ no Overview
+ const OVREV={Stellantis:{'2024':506.08,'2025':735.32}};
  let tiles='';
  a.forEach(co=>{
   const k=kpis(co,y); const useGtf=state.seg==='gtf';
-  const rec=useGtf?k.gtfRec:k.receita, eb=useGtf?k.gtfEbitda:k.ebitda, mg=useGtf?k.gtfMg:k.mgEbitda;
+  const ovr=(OVREV[co]&&OVREV[co][y]!=null)?OVREV[co][y]:null;
+  const ovrPrev=(OVREV[co]&&prevYear(y)&&OVREV[co][prevYear(y)]!=null)?OVREV[co][prevYear(y)]:null;
+  const rec=ovr!=null?ovr:(useGtf?k.gtfRec:k.receita);
   const recBruta=rec/(1-0.0925); // receita bruta = líquida revertendo PIS/Cofins (9,25%)
-  const gr=prevYear(y)?( (useGtf?gtf(co,y).receita:pl(co,y).receita) - (useGtf?gtf(co,prevYear(y)).receita:pl(co,prevYear(y)).receita) )/Math.abs(useGtf?gtf(co,prevYear(y)).receita:pl(co,prevYear(y)).receita):null;
+  const _curR=ovr!=null?ovr:(useGtf?gtf(co,y).receita:pl(co,y).receita);
+  const _prevR=ovrPrev!=null?ovrPrev:(prevYear(y)?(useGtf?gtf(co,prevYear(y)).receita:pl(co,prevYear(y)).receita):null);
+  const gr=prevYear(y)?((_curR-_prevR)/Math.abs(_prevR)):null;
   tiles+=`<div class="kpi"><div class="edge" style="background:${COL[co]}"></div>
    <div class="co"><span class="dot" style="background:${COL[co]};border:1px solid ${BORD[co]}"></span>${logoBadge(co,13)}</div>
    <div class="big num">${fmtR(rec)}</div><div class="lbl">Receita líquida · ${segLbl}</div>
    <div class="lbl" style="margin-top:3px" title="Receita bruta estimada = líquida ÷ 0,9075 (revertendo PIS/Cofins de 9,25%)">Receita bruta <b class="num">${fmtR(recBruta)}</b></div>
    <div class="delta ${gr>=0?'up':'down'}">${gr==null?'':(gr>=0?'▲':'▼')+' '+pct(Math.abs(gr))+' a/a'}</div>
-   <div class="lbl" style="margin-top:8px">EBITDA <b class="num">${fmtR(eb)}</b> · margem <b class="num">${pct(mg)}</b></div>
   </div>`;
  });
  C().innerHTML=`
