@@ -68,6 +68,7 @@ body{font-family:'Encode Sans',system-ui,sans-serif;background:var(--bg);color:v
 .g4{grid-template-columns:repeat(4,1fr)}
 .g3{grid-template-columns:repeat(3,1fr)}
 .g2{grid-template-columns:repeat(2,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
 .span2{grid-column:span 2}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .card h3{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px}
@@ -76,7 +77,7 @@ body{font-family:'Encode Sans',system-ui,sans-serif;background:var(--bg);color:v
 .sectionhead{display:flex;align-items:baseline;gap:12px;margin:30px 2px 14px}
 .sectionhead .n{font-family:'Encode Sans Semi Condensed';font-weight:700;font-size:12px;color:var(--gold);letter-spacing:.1em}
 .sectionhead h2{font-size:16px;font-weight:700}
-.sectionhead p{font-size:12px;color:var(--muted);margin-left:auto;max-width:520px;text-align:right}
+.sectionhead p{display:none}
 
 /* KPI tiles */
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 17px;position:relative;overflow:hidden}
@@ -142,7 +143,7 @@ select{font-family:inherit;font-size:12.5px;font-weight:600;border:1.5px solid v
 .dashfoot b{color:var(--ink);font-weight:700}
 .dashfoot .sep{opacity:.5}
 @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}}
-@media(max-width:820px){.shell{grid-template-columns:1fr}.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap}.nav{display:flex;flex-wrap:wrap}.g4,.g3,.g2{grid-template-columns:1fr}.span2{grid-column:auto}.sectionhead p{display:none}}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap}.nav{display:flex;flex-wrap:wrap}.g4,.g3,.g2,.g5{grid-template-columns:1fr}.span2{grid-column:auto}.sectionhead p{display:none}}
 </style>
 </head>
 <body>
@@ -166,7 +167,7 @@ select{font-family:inherit;font-size:12.5px;font-weight:600;border:1.5px solid v
       <p class="cos">Stellantis · Localiza · Movida · Unidas · LM</p>
       <div class="foot">
         <div><b>Fonte:</b> ITR/Release e fontes internas</div>
-        <div><b>Atualizado em</b> 30/06/2026 11:11 (Brasília)</div>
+        <div><b>Atualizado em</b> 01/07/2026 11:00 (Brasília)</div>
         <div><b>Owner:</b> Pedro Cerqueira</div>
       </div>
     </div>
@@ -445,7 +446,7 @@ function dreRows(co,y){
     {k:'deprec',    l:'Depreciação & amortização', v:p.deprec,      t:'neg'},
     {k:'ebit',      l:'EBIT',                      v:p.ebit,        t:'sub'},
     {k:'res_fin',   l:'Resultado financeiro',      v:p.res_fin,     t:'neg'},
-    {k:'aoi',       l:'Resultado Ajustado (AOI)',  v:aoi,           t:'sub'},
+    {k:'aoi',       l:'EBT | Result. Ajust | AOI',  v:aoi,           t:'sub'},
     {k:'ir',        l:'IR/CSLL & outros',          v:ir,            t:'delta'},
     {k:'lucro_liq', l:'Lucro líquido',             v:p.lucro_liq,   t:'tot'}
   ];
@@ -467,7 +468,7 @@ function dreRowsGtf(co,y){
     {k:'deprec', l:'Depreciação (frota)',        v:g.ebit-g.ebitda,          t:'neg'},
     {k:'ebit',   l:'EBIT (GTF)',                 v:g.ebit,                   t:'sub'},
     {k:'res_fin',l:'Resultado financeiro ◳',     v:resFinProp,               t:'neg',  prop:true},
-    {k:'aoi',    l:'Resultado Ajustado (AOI) ◳', v:aoiProp,                  t:'sub',  prop:true},
+    {k:'aoi',    l:'EBT | Result. Ajust | AOI ◳', v:aoiProp,                  t:'sub',  prop:true},
     {k:'ir',     l:'IR/CSLL & outros ◳',         v:irProp,                   t:'delta',prop:true},
     {k:'lucro_liq',l:'Lucro líquido (GTF) ◳',    v:netProp,                  t:'tot',  prop:true}
   ];
@@ -928,85 +929,48 @@ function bl(items){return `<ul class="clean tight">${items.map(([t,h])=>`<li><sp
 
 function renderHighlights(){
   C().innerHTML=`
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--navy-soft);border:1px solid var(--navy);border-radius:12px;padding:11px 16px;margin-bottom:14px">
+    <span style="font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy)">Análise comparativa</span>
+    <span style="font-weight:800;font-size:16px;color:var(--ink)">2024 → 2025</span>
+    <span style="margin-left:auto;font-size:12px;color:var(--muted)">Todas as variações e conclusões deste painel referem-se à evolução de 2024 para 2025.</span>
+  </div>
   <div class="card ctx">
     <h3><span class="barK"></span>Contexto — Stellantis Locadora (foco da análise)</h3>
     <div class="metawrap">
-      <p><b>Setor:</b> locação e gestão de frotas (GTF) — a empresa compra o carro e cobra uma mensalidade do cliente corporativo, monetizando o mesmo ativo por anos em vez de vendê-lo uma única vez. <b>Modelo:</b> captive da Stellantis, 100% GTF, sem RAC nem Seminovos relevantes — toda a receita depende de um único motor de crescimento. <b>Porte:</b> o menor player do grupo — Receita 2025 de R$ 369 Mi (vs. R$ 42 Bi da Localiza) e frota de 21,1 mil veículos. <b>Fase:</b> rampa acelerada (receita +76%, frota +106% em 2025), viabilizada por uma recapitalização que sextuplicou o patrimônio líquido (R$ 85 Mi → R$ 514 Mi) — o controlador pagou a conta do crescimento.</p>
       <p><b>Dor central:</b> a operação já entrega uma das margens mais altas do setor (EBITDA 60%, EBIT 32%), mas boa parte desse ganho é consumida antes de chegar ao lucro: o resultado financeiro — juros e variação cambial sobre a dívida — abocanha 21,7% da receita. Em outras palavras, a Stellantis não tem um problema de operar a frota; tem um problema de pagar pelo dinheiro que financia essa frota. A decisão que define 2026 não é comercial, é de tesouraria: como crescer sem deixar o custo da dívida crescer na mesma proporção.</p>
     </div>
   </div>
 
   <div class="sectionhead"><span class="n">1</span><h2>Resumo Executivo</h2><p>Como cada empresa performou em 2025 — leitura objetiva</p></div>
-  <div class="grid g2">
+  <div class="grid g5">
     <div class="card">${coHead('Stellantis','captive · 100% GTF')}${bl([
-      ['g','Receita salta 76% (R$ 210→369 Mi) e a frota cresce ainda mais rápido, 106% (10,2k→21,1k): a empresa está comprando posição de mercado, não só faturando mais sobre a frota que já tinha.'],
-      ['','O aporte do controlador refaz o balanço: PL sobe de R$ 85 para 514 Mi, e a alavancagem recua em ambas as métricas — DL/PL de 7,1x→1,4x e DL/EBITDA de 5,2x→3,3x — de um balanço apertado para um com folga real para financiar o crescimento.'],
-      ['g','A escala já gera alavancagem operacional: margem EBIT salta de 21,7%→31,7%, com EBITDA em 59,6% — cada carro adicional custa proporcionalmente menos para operar.'],
-      ['g','Lucro líquido quase decuplica, de R$ 2,6→24,5 Mi, levando o ROE de 0,9%→8,2% — ainda baixo para uma margem operacional desse tamanho.'],
-      ['r','Resultado financeiro consome 21,7% da receita — a 2ª maior mordida do grupo, atrás só da LM, e o motivo direto de uma margem EBIT de 32% ainda produzir um ROE de um dígito.'],
-      ['o','Financia 28% do imobilizado com crédito da própria montadora, a maior proporção do grupo — vantagem estrutural de ser captive que ainda tem espaço para crescer.']
+      ['g','Receita +76% e frota +106%: comprando posição de mercado, não só faturando mais.'],
+      ['g','Recapitalização refaz o balanço (PL R$ 85→514 Mi); DL/EBITDA 5,2x→3,3x.'],
+      ['r','Financeiro consome 21,7% da receita — 2ª maior mordida do grupo; segura o ROE em 8,2%.']
     ])}</div>
     <div class="card">${coHead('Localiza','líder · RAC+GTF+Seminovos')}${bl([
-      ['g','Receita cresce 12% com a frota encolhendo 1,6%: o crescimento vem de tarifa e mix, não de comprar mais carro — sinal de poder de precificação raro no setor.'],
-      ['g','Margem EBIT sobe de 15,6%→18,7%, puxada por disciplina de depreciação e Seminovos, com EBITDA estável em ~33% — o ganho vem de gerir melhor o que já tem.'],
-      ['','Mantém o balanço mais sólido do grupo: DL/EBITDA 2,4x, DL/PL 1,3x, PL/Ativo ~30% — a maior margem de segurança do peer set para absorver um choque de juros.'],
-      ['g','ROIC salta de 6,4%→8,8%, fechando a distância para o custo da dívida — o retorno sobre capital empregado finalmente perto de remunerar quem financia esse capital.'],
-      ['r','Ainda assim, a margem líquida cede (4,9%→4,5%) e o lucro fica praticamente parado (R$ 1,87 Bi) — prova de que nem o balanço mais forte do setor escapa da pressão financeira.'],
-      ['o','Reduz frota e ainda cresce receita: poder de precificação raro, e o principal motivo pelo qual segue líder mesmo comprando menos carro que os concorrentes.']
+      ['g','Receita +12% com frota −1,6%: cresce por tarifa e mix — pricing power raro.'],
+      ['g','Balanço mais sólido do grupo (DL/EBITDA 2,4x); ROIC 6,4%→8,8%.'],
+      ['r','Mesmo assim, margem líquida cede (4,9%→4,5%) e o lucro fica parado (R$ 1,87 Bi).']
     ])}</div>
     <div class="card">${coHead('Movida','RAC+GTF+Seminovos')}${bl([
-      ['g','Receita +8,8% com margens em expansão (EBITDA 34,9%→38,8%; EBIT 19,4%→22,2%) — ganho de eficiência, não de volume.'],
-      ['g','Entrega os melhores retornos do grupo: ROE 8,5%→11,7% e ROIC 9,6%→10,7% — a operação converte capital em resultado melhor que qualquer par.'],
-      ['r','Mas o capital próprio que sustenta esse retorno é finíssimo: PL/Ativo 8,5%, DL/PL 5,7x — o melhor ROIC do grupo está montado sobre a menor almofada do grupo.'],
-      ['r','O resultado financeiro piora (−17,1%→−19,8% da receita), limitando quanto desse ganho operacional chega ao lucro.'],
-      ['','Margem líquida ainda baixa (2,2%) mesmo com EBIT em expansão — o funil entre operação e lucro continua estreito.'],
-      ['o','O maior ROIC do peer set e a menor almofada patrimonial vêm no mesmo pacote: eficiência e risco caminham juntos na Movida.']
+      ['g','Receita +8,8% com margens em expansão (EBITDA 34,9%→38,8%) — eficiência.'],
+      ['g','Melhores retornos do grupo: ROE 11,7% e ROIC 10,7%.'],
+      ['r','Sobre capital próprio finíssimo (PL/Ativo 8,5%, DL/PL 5,7x): eficiência e risco juntos.']
     ])}</div>
     <div class="card">${coHead('Unidas','GTF Leves+Pesados+RAC')}${bl([
-      ['g','Receita +12,6% com frota −4,6%: também escolheu preço sobre volume — mas, diferente da Localiza, não consegue levar esse ganho até o lucro.'],
-      ['','Margens operacionais seguem estáveis (EBITDA ~36%, EBIT ~20%) — a operação não piora; o problema está em outro lugar.'],
-      ['r','Lucro líquido praticamente evapora, de R$ 85→10 Mi, com margem caindo de 1,3%→0,1% e ROE de 3,6%→0,4% — um resultado que beira o ponto de equilíbrio.'],
-      ['g','ROIC, porém, melhora (7,6%→8,6%): a operação é saudável — o que destrói valor está abaixo da linha do EBIT.'],
-      ['r','Resultado financeiro consome 19,4% da receita — é essa conta, e não a operação, que come o lucro até quase zerá-lo.'],
-      ['o','O descasamento entre boa operação e lucro quase nulo é o caso mais didático do peer set sobre o custo de não repassar juros ao cliente.']
+      ['g','Receita +12,6% com frota −4,6%: preço sobre volume; ROIC 7,6%→8,6%.'],
+      ['r','Lucro evapora (R$ 85→10 Mi; margem 1,3%→0,1%): financeiro come tudo abaixo do EBIT.'],
+      ['o','Caso mais didático do peer set sobre não repassar juros ao cliente.']
     ])}</div>
-    <div class="card span2" style="grid-column:span 2">${coHead('LM','~96% GTF puro')}${bl([
-      ['g','Crescimento mais agressivo entre as listadas: receita +27% e frota +21%, toda em GTF puro — sem RAC ou Seminovos para diluir o efeito.'],
-      ['g','Margens líderes do grupo: EBITDA 48,9% e EBIT 32,3% — o modelo de GTF puro, sem giro de baixo spread, entrega a operação mais rentável do setor.'],
-      ['r','Mas o lucro líquido despenca, de R$ 200→45 Mi, com margem caindo de 4,8%→0,9% e ROE de 8,0%→1,8% — a melhor operação do grupo produzindo um dos piores resultados finais.'],
-      ['r','A explicação está no balanço: realavancou para crescer — DL/PL sobe de 3,5x→4,6x e DL/EBITDA chega a 4,6x, a mais alavancada do peer set.'],
-      ['r','Resultado financeiro consome 30,5% da receita, o maior peso do grupo — anula, praticamente sozinho, o ganho operacional construído.'],
-      ['o','Prova viva de que margem operacional recorde não significa nada se o crescimento for financiado por dívida cara: o limite mais claro entre crescer e destruir valor no peer set.']
+    <div class="card">${coHead('LM','~96% GTF puro')}${bl([
+      ['g','Mais agressiva das listadas (receita +27%, frota +21%); margens líderes (EBITDA 48,9%).'],
+      ['r','Mas o lucro despenca (R$ 200→45 Mi): realavancou (DL/EBITDA 4,6x, a maior do grupo).'],
+      ['r','Financeiro consome 30,5% da receita — anula sozinho o ganho operacional.']
     ])}</div>
   </div>
 
-  <div class="sectionhead"><span class="n">2</span><h2>Leitura Estratégica</h2><p>Estratégia, alocação de capital, defesa de margem e fragilidades — por empresa</p></div>
-  <div class="grid g2">
-    <div class="card">${coHead('Localiza')}<div class="metawrap"><p><b>Estratégia:</b> liderar por escala e preço — mas extraindo isso de cada carro que já tem, não de comprar carro novo. <b>Investe</b> em yield (tarifa, mix, Seminovos) e <b>corta</b> capex de frota. <b>Defende margem</b> via disciplina de depreciação e remarketing, levando o EBIT a subir 3 p.p. mesmo com frota menor. <b>Cresce</b> por tarifa, não por volume — única do grupo que aumenta receita reduzindo o ativo que a gera. <b>Vantagem real, não declarada no release:</b> poder de precificação combinado ao melhor balanço do setor, o que barateia o funding e sustenta um ROIC em trajetória de alta.</p>
-      <p class="note"><b>Sinal fraco:</b> a queda de frota junto com receita em alta só funciona se houver repasse de preço sustentado — é a evidência mais clara de pricing power no setor, não um dado isolado de eficiência. <b>Fragilidade futura:</b> o modelo depende de a tarifa continuar subindo; se o ciclo de preços virar, o crescimento estanca junto.</p></div></div>
-    <div class="card">${coHead('Movida')}<div class="metawrap"><p><b>Estratégia:</b> maximizar retorno sobre um capital próprio mínimo — a alavancagem é o motor do ROE e do ROIC, não um efeito colateral. <b>Investe</b> em frota com financiamento agressivo; <b>defende margem</b> via eficiência operacional real (EBITDA +4 p.p.). <b>Cresce</b> em volume e tarifa, em ritmo moderado. <b>Vantagem real, não declarada:</b> a melhor execução operacional do peer set, capaz de gerar o maior ROIC do grupo mesmo sem o balanço mais forte.</p>
-      <p class="note"><b>Sinal fraco:</b> um PL/Ativo de 8,5% mostra que parte relevante desse retorno é amplificação por alavancagem, não apenas eficiência — os dois efeitos estão misturados no número de ROIC, e separá-los é o que diferencia execução de risco. <b>Fragilidade futura:</b> a almofada patrimonial fina deixa pouca margem para um choque de juros ou uma reprecificação de valor residual dos carros usados.</p></div></div>
-    <div class="card">${coHead('Unidas')}<div class="metawrap"><p><b>Estratégia:</b> reposicionar para preço e retorno (frota −4,6%, receita +12,6%) enquanto ainda digere a alavancagem do ciclo anterior. <b>Investe</b> seletivamente; <b>corta</b> frota e capital de giro — fornecedores em queda confirmam a contração deliberada. <b>Defende margem</b> operacional, mas perde a batalha abaixo do EBIT, onde o resultado financeiro consome o que a operação entrega. <b>Vantagem real:</b> ainda incipiente — o caso da Unidas hoje é de turnaround financeiro, não de vantagem competitiva consolidada.</p>
-      <p class="note"><b>Sinal fraco:</b> o ROIC sobe no mesmo período em que o lucro desaparece — inconsistência que só se explica porque a deterioração é 100% financeira, não operacional, e por isso não aparece nos indicadores de operação. <b>Fragilidade futura:</b> com margem líquida de 0,1%, qualquer alta adicional de juros — ou mesmo a manutenção do nível atual — empurra a empresa para o prejuízo.</p></div></div>
-    <div class="card">${coHead('LM')}<div class="metawrap"><p><b>Estratégia:</b> ganhar participação em GTF puro com crescimento agressivo financiado por dívida. <b>Investe</b> pesado em frota, +21%, sem cortar nada — acelera onde os pares freiam. <b>Defende margem</b> operacional pela pureza do modelo, sem RAC ou Seminovos de baixo spread para diluir a rentabilidade. <b>Cresce</b> em volume, não em preço. <b>Vantagem real, não declarada:</b> a estrutura de GTF puro entrega a maior margem operacional do peer set — um modelo melhor que o dos concorrentes diversificados, pelo menos antes da linha de juros.</p>
-      <p class="note"><b>Sinal fraco:</b> a realavancagem de DL/PL 3,5x→4,6x, simultânea ao crescimento de frota, mostra uma aposta deliberada em ganhar mercado antes de gerar lucro — escolha de share sobre lucro, não efeito colateral do crescimento. <b>Fragilidade futura:</b> com o resultado financeiro em 30,5% da receita, o modelo é insustentável sem queda de juros ou reprecificação dos contratos, com risco real de pressão sobre covenants.</p></div></div>
-  </div>
-
-  <div class="sectionhead"><span class="n">3</span><h2>Análise Financeira Profunda</h2><p>Os indicadores que mais se moveram — o que mudou, por quê e o impacto provável</p></div>
-  <div class="grid g2">
-    <div class="card"><h4 style="margin:0 0 6px">① Resultado financeiro / Receita — piora em todo o grupo</h4><div class="metawrap">
-      <p><b>O que mudou:</b> a mordida do resultado financeiro sobre a receita aumentou nas quatro empresas (LM −22%→−30,5%; Movida −17%→−19,8%; Unidas −17%→−19,4%; STLA −20%→−21,7%). <b>Por quê:</b> a Selic ficou alta por mais tempo do que o mercado esperava, e a dívida do setor é majoritariamente atrelada ao CDI — quem cresceu a frota com mais dívida no período, como a LM, sentiu o efeito de forma mais intensa. <b>Impacto e decisão para a Stellantis:</b> este é o vetor número um do lucro do setor hoje, não a operação. Sem queda estrutural de juros, a saída é alongar e baratear o funding — via crédito da montadora, no caso da Stellantis — ou repassar o custo da dívida ao cliente por contrato. Tratar isso como prioridade de tesouraria, e não de operação, é a decisão de segunda-feira.</p></div></div>
-    <div class="card"><h4 style="margin:0 0 6px">② Margem/Lucro líquido — colapso em Unidas e LM</h4><div class="metawrap">
-      <p><b>O que mudou:</b> a margem líquida da Unidas cai de 1,3%→0,1% (lucro de R$ 85→10 Mi) e a da LM, de 4,8%→0,9% (lucro de R$ 200→45 Mi). <b>Por quê:</b> em ambas o EBITDA está estável ou crescendo — não é problema de operação; o resultado financeiro absorveu praticamente todo o ganho operacional do período. <b>Impacto futuro:</b> sem desalavancar ou reprecificar contratos, as duas seguem hostage da taxa de juros, com risco crescente sobre covenants e capacidade de investir. Para a Stellantis, é o aviso mais direto do peer set: EBITDA crescente não garante nada se o passivo crescer na mesma velocidade.</p></div></div>
-    <div class="card"><h4 style="margin:0 0 6px">③ Estrutura de capital da Stellantis — recapitalização de 6x</h4><div class="metawrap">
-      <p><b>O que mudou:</b> o PL salta de R$ 85→514 Mi; PL/Ativo passa de 6,8%→21,3%; dívida líquida sobre PL cai de 7,1x→1,4x. <b>Por quê:</b> aportes do controlador para sustentar a expansão da frota sem repetir o caminho da dívida bancária cara. <b>Impacto e decisão para a Stellantis:</b> o aporte abriu espaço de endividamento saudável — a empresa pode tomar mais dívida sem voltar ao nível de risco de 2024. Mas espaço para endividar não é mandato para usar: a decisão correta é converter essa folga em ROIC comprovado antes de qualquer nova rodada de realavancagem, não acelerar capex só porque agora há limite para isso.</p></div></div>
-    <div class="card"><h4 style="margin:0 0 6px">④ ROIC — em alta na maioria, mas ainda abaixo do custo da dívida</h4><div class="metawrap">
-      <p><b>O que mudou:</b> o ROIC sobe em Localiza (6,4%→8,8%), Movida (9,6%→10,7%), Unidas (7,6%→8,6%) e STLA (4,3%→6,2%). <b>Por quê:</b> ganhos operacionais reais e melhor giro de ativos, não apenas efeito contábil. <b>Impacto e decisão para a Stellantis:</b> mesmo com a melhora, o custo da dívida — de 14% a 30% da receita, dependendo da empresa — ainda supera o ROIC na maioria dos casos: o spread de valor continua negativo. Com ROIC de 6,2% e funding ainda caro, a alavanca que falta para a Stellantis não é operacional — é desalavancar relativamente ao tamanho do balanço, ou baratear a dívida via montadora, antes de perseguir mais crescimento.</p></div></div>
-    <div class="card span2" style="grid-column:span 2"><h4 style="margin:0 0 6px">⑤ Frota × Receita/veículo — duas escolas no setor</h4><div class="metawrap">
-      <p><b>O que mudou:</b> Localiza (−1,6%) e Unidas (−4,6%) cortaram frota e ainda subiram receita; LM (+21%) e STLA (+106%) fizeram o caminho oposto e expandiram agressivamente. <b>Por quê:</b> os líderes priorizam retorno sobre capital — extrair mais de cada carro via tarifa; os desafiantes priorizam participação — ganhar volume primeiro, rentabilizar depois. <b>Impacto e decisão para a Stellantis:</b> em ciclo de juros ainda elevado, a escola do yield protege caixa e ROIC; a escola do volume só compensa quando o spread entre ROIC e custo da dívida volta a ser positivo. A receita/veículo da Stellantis, R$ 17,5 mil contra R$ 63 mil de Localiza e Unidas, mostra uma reserva de precificação ainda enorme — crescer frota sem testar esse limite de tarifa primeiro é deixar dinheiro na mesa.</p></div></div>
-  </div>
-
-  <div class="sectionhead"><span class="n">4</span><h2>O que a Stellantis Locadora pode aprender</h2><p>Prática observada → Mecanismo → Versão para a Stellantis → Como medir</p></div>
+  <div class="sectionhead"><span class="n">2</span><h2>O que a Stellantis Locadora pode aprender</h2><p>Prática observada → Mecanismo → Versão para a Stellantis → Como medir</p></div>
   <div class="grid g2">
     <div class="card lesson"><h4>① Yield antes de volume (Localiza)</h4><div class="metawrap">
       <p><b>Prática:</b> crescer receita reduzindo a frota, via tarifa e mix de contratos. <b>Mecanismo:</b> mais receita por carro com menos capex de aquisição faz caixa e ROIC subirem juntos. <b>Para a STLA:</b> instituir reajuste indexado (IPCA + repasse de variação de juros) em todo contrato GTF novo e renovação, e um gate de ocupação mínima antes de autorizar a compra de carro novo. <b>Como medir:</b> receita/veículo (hoje R$ 17,5k) subindo a/a e taxa de ocupação ≥ meta.</p></div></div>
@@ -1023,7 +987,7 @@ function renderHighlights(){
     ['r','<b>O descasamento de funding da Unidas:</b> operação saudável anulada por dívida atrelada ao CDI sem repasse. Regra prática: não deixar o resultado financeiro passar de ~20% da receita sem hedge ou cláusula de repasse.']
   ])}</div>
 
-  <div class="sectionhead"><span class="n">5</span><h2>Ações Práticas para a Stellantis</h2><p>Por horizonte — o quê, prazo, recurso mínimo e métrica de sucesso</p></div>
+  <div class="sectionhead"><span class="n">3</span><h2>Ações Práticas para a Stellantis</h2><p>Por horizonte — o quê, prazo, recurso mínimo e métrica de sucesso</p></div>
   <div class="grid g3">
     <div class="card act"><div class="actk">Imediato · 0–90 dias</div>${bl([
       ['o','<b>Cláusula de repasse de juros</b> (IPCA + variação de CDI) em 100% dos contratos GTF novos e renovações. <span class="rsc">Recurso: 1 analista comercial + jurídico (custo marginal ~R$ 0). Métrica: % de contratos com indexação; receita/veículo.</span>'],
@@ -1056,7 +1020,7 @@ function renderHighlights(){
     ])}</div>
   </div>
 
-  <div class="sectionhead"><span class="n">6</span><h2>Conclusão Final</h2><p>Sem rodeio — uma frase por item</p></div>
+  <div class="sectionhead"><span class="n">4</span><h2>Conclusão Final</h2><p>Sem rodeio — uma frase por item</p></div>
   <div class="grid g2">
     <div class="card"><h4 style="margin:0 0 6px">As 3 maiores lições estratégicas</h4>${bl([
       ['g','Yield vence volume em ciclo de juros altos: mais receita por carro, não mais carro, é o que protege caixa e ROIC — a lição mais clara da Localiza.'],
@@ -1067,11 +1031,6 @@ function renderHighlights(){
       ['r','Financiar hipercrescimento com dívida cara, como a LM, levando o resultado financeiro a quase um terço da receita.'],
       ['r','Operar com capital próprio mínimo e sem margem para choques, como a Movida (PL/Ativo 8,5%).'],
       ['r','Não repassar o custo dos juros ao cliente e deixar o financeiro consumir o lucro até quase zerá-lo, como a Unidas (margem líquida 0,1%).']
-    ])}</div>
-    <div class="card span2" style="grid-column:span 2">${bl([
-      ['','<b>Principal insight financeiro:</b> em 2025 a disputa do setor não foi operacional, foi de tesouraria — quem não controlou o custo da dívida viu o lucro evaporar mesmo com EBITDA crescente, e essa é a variável que vai decidir 2026 também.'],
-      ['','<b>Principal insight operacional:</b> a Stellantis tem a maior margem EBIT relativa entre os players em rampa, mas a menor receita por veículo do grupo — há espaço de precificação ainda não explorado, a primeira alavanca de lucro disponível antes de qualquer decisão de funding.'],
-      ['','<b>Principal insight estratégico:</b> a Stellantis está no momento certo — recém-capitalizada, margem operacional alta e acesso a funding de montadora; o que vai decidir se esse momento se converte em vantagem duradoura é a disciplina de alavancagem dos próximos 24 meses, não a operação do dia a dia.']
     ])}</div>
   </div>
 
